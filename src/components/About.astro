@@ -1,0 +1,24 @@
+---
+// src/components/sections/About.astro
+import AnimateIn from './animations/AnimateIn';
+
+---
+
+<section id="about" class="py-32 bg-white dark:bg-gray-900"> <!-- Increased padding -->
+  <div class="container mx-auto px-6">
+    <AnimateIn client:visible animation="slideUp">
+      <h2 class="text-3xl font-bold mb-12 text-gray-900 dark:text-white text-center"> <!-- Fixed text color -->
+        About Me
+      </h2>
+
+      <div class="max-w-3xl mx-auto">
+        <p class="text-lg mb-6 text-gray-800 dark:text-gray-200"> <!-- Fixed text color -->
+          I'm a Full Stack Developer with experience in building web applications.
+          I enjoy creating software that solves real-world problems and delivers great user experiences.
+        </p>
+        <!-- Add more content as needed -->
+      </div>
+    </AnimateIn>
+  </div>
+</section>
+

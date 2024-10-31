@@ -1,0 +1,58 @@
+---
+// src/components/sections/Experience.astro
+import AnimateIn from './animations/AnimateIn';
+
+const experiences = [
+  {
+    title: "Senior Software Engineer",
+    company: "Tech Company",
+    period: "2021 - Present",
+    description: [
+      "Led the development of a microservices architecture",
+      "Mentored junior developers and conducted code reviews",
+      "Implemented CI/CD pipelines reducing deployment time by 60%"
+    ],
+    tags: ["React", "Node.js", "AWS", "Docker"]
+  }
+];
+---
+
+<section id="experience" class="py-32 bg-gray-50 dark:bg-gray-800">
+  <div class="container mx-auto px-6">
+    <AnimateIn client:visible animation="slideUp">
+      <h2 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+        Experience
+      </h2>
+    </AnimateIn>
+
+    <div class="max-w-4xl mx-auto space-y-8">
+      {experiences.map((job, index) => (
+        <AnimateIn client:visible animation="slideLeft" delay={index * 0.1}>
+          <div class="bg-white dark:bg-gray-900 rounded-lg p-6 shadow-lg">
+            <div class="flex flex-col sm:flex-row justify-between mb-4">
+              <div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">{job.title}</h3>
+                <p class="text-blue-600 dark:text-blue-400">{job.company}</p>
+              </div>
+              <p class="text-gray-600 dark:text-gray-400">{job.period}</p>
+            </div>
+
+            <ul class="mb-4 space-y-2 list-disc list-inside text-gray-600 dark:text-gray-300">
+              {job.description.map(item => (
+                <li>{item}</li>
+              ))}
+            </ul>
+
+            <div class="flex flex-wrap gap-2">
+              {job.tags.map(tag => (
+                <span class="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </AnimateIn>
+      ))}
+    </div>
+  </div>
+</section>

@@ -4,48 +4,81 @@
 @tailwind utilities;
 
 @layer base {
-  /* Base text colors */
+
+  html {
+    @apply cursor-none;
+  }
+
+  button, a, input[type="submit"], [role="button"] {
+    @apply cursor-none;
+  }
+
   body {
     @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-white;
   }
 
-  /* Headings */
+  /* Heading defaults */
   h1, h2, h3, h4, h5, h6 {
     @apply text-gray-900 dark:text-white font-bold;
   }
 
-  /* Paragraphs */
+  /* Paragraph defaults */
   p {
-    @apply text-gray-700 dark:text-gray-300;
-  }
-
-  /* Links */
-  a {
-    @apply text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400;
-  }
-
-  /* Section spacing */
-  section {
-    @apply py-32;
-  }
-
-  /* Section background colors */
-  section.bg-alt {
-    @apply bg-gray-50 dark:bg-gray-800;
+    @apply text-gray-600 dark:text-gray-300;
   }
 }
 
-/* Transitions */
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  @apply w-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-700 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400 dark:bg-gray-600;
+}
+
+/* Theme transitions */
 * {
   @apply transition-colors duration-200;
 }
 
-/* Container */
-.container {
-  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+/* Card hover effects */
+.hover-lift {
+  @apply transition-all duration-300;
 }
 
-/* Card styles */
-.card {
-  @apply bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden;
+.hover-lift:hover {
+  @apply -translate-y-1 shadow-lg;
+}
+
+/* Cursor styles */
+.cursor-dot {
+  @apply bg-current text-gray-800 dark:text-white;
+}
+
+.cursor-ring {
+  @apply border-current text-gray-800 dark:text-white;
+}
+
+/* Disable custom cursor for mobile/touch devices */
+@media (hover: none) and (pointer: coarse) {
+  html, button, a, input[type="submit"], [role="button"] {
+    @apply cursor-auto;
+  }
+}
+
+
+/* Only show custom cursor on non-touch devices */
+@media (hover: hover) and (pointer: fine) {
+.custom-cursor {
+  @apply block;
+}
 }

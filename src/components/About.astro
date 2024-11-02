@@ -1,24 +1,265 @@
 ---
-// src/components/sections/About.astro
-import AnimateIn from './animations/AnimateIn';
+import { Icon } from 'astro-icon/components';
 
+interface Skill {
+  name: string;
+  icon: string;
+  className?: string;
+}
+
+interface SkillCategory {
+  category: string;
+  description: string;
+  skills: Skill[];
+}
+
+const skills: SkillCategory[] = [
+  {
+    category: "Frontend Development",
+    description: "Building responsive and interactive user interfaces",
+    skills: [
+      { name: "React", icon: "logos:react" },
+      { name: "Next.js", icon: "logos:nextjs-icon", className: "dark:invert" },
+      { name: "TypeScript", icon: "logos:typescript-icon" },
+      { name: "Tailwind", icon: "logos:tailwindcss-icon" },
+      { name: "Angular", icon: "logos:angular-icon" },
+      { name: "Astro", icon: "logos:astro-icon" }
+    ]
+  },
+  {
+    category: "Backend Development",
+    description: "Creating highly scalable server-side applications",
+    skills: [
+      { name: "Node.js", icon: "logos:nodejs-icon" },
+      { name: "Python", icon: "logos:python" },
+      { name: "GraphQL", icon: "logos:graphql" },
+      { name: "MongoDB", icon: "logos:mongodb-icon" },
+      { name: "PostgreSQL", icon: "logos:postgresql" },
+      { name: "NestJS", icon: "logos:nestjs" }
+    ]
+  },
+  {
+    category: "Tools & DevOps",
+    description: "Optimizing development and deployment workflows",
+    skills: [
+      { name: "Git", icon: "logos:git-icon" },
+      { name: "Docker", icon: "logos:docker-icon" },
+      { name: "AWS", icon: "logos:aws" },
+      { name: "Firebase", icon: "logos:firebase" },
+      { name: "Kubernetes", icon: "logos:kubernetes" },
+      { name: "Redis", icon: "logos:redis" }
+    ]
+  }
+];
+
+const achievements = [
+  { 
+    number: "3+", 
+    label: "Years Experience",
+    icon: "mdi:calendar-clock",
+    color: "from-blue-500 to-blue-600"
+  },
+  { 
+    number: "12+", 
+    label: "Projects Completed",
+    icon: "mdi:rocket-launch",
+    color: "from-green-500 to-green-600"
+  },
+  { 
+    number: "2", 
+    label: "Awards Won",
+    icon: "mdi:trophy",
+    color: "from-yellow-500 to-yellow-600"
+  }
+];
 ---
 
-<section id="about" class="py-32 bg-white dark:bg-gray-900"> <!-- Increased padding -->
-  <div class="container mx-auto px-6">
-    <AnimateIn client:visible animation="slideUp">
-      <h2 class="text-3xl font-bold mb-12 text-gray-900 dark:text-white text-center"> <!-- Fixed text color -->
-        About Me
-      </h2>
-
-      <div class="max-w-3xl mx-auto">
-        <p class="text-lg mb-6 text-gray-800 dark:text-gray-200"> <!-- Fixed text color -->
-          I'm a Full Stack Developer with experience in building web applications.
-          I enjoy creating software that solves real-world problems and delivers great user experiences.
-        </p>
-        <!-- Add more content as needed -->
-      </div>
-    </AnimateIn>
+<div class="mx-auto max-w-6xl px-4 py-12">
+  <!-- Upper Section -->
+  <div class="text-center mb-20">
+    <h1 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+      About Me
+    </h1>
+    <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+      Full Stack Developer passionate about creating innovative web solutions and learning new technologies. 
+      Focused on building scalable and performant applications that solve real-world problems.
+    </p>
   </div>
-</section>
+  
+  <!-- Skills Section -->
+  <div class="mb-32">
+    <h2 class="text-3xl font-bold mb-16 text-center text-[#3B82F6] dark:text-[#60A5FA]">
+      Technical Skills
+    </h2>
+    <!-- Skills and Achievements Combined Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-16">
+      {skills.map((category, categoryIndex) => (
+        <div class="flex flex-col">
+          <!-- Skill Category -->
+          <div class="skill-category mb-8" style={`--delay: ${categoryIndex * 0.3}s`}>
+            <h3 class="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-100 text-center">
+              {category.category}
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 text-center mb-8 text-md">
+              {category.description}
+            </p>
+            <div class="grid grid-cols-3 gap-6 mb-8">
+              {category.skills.map((skill, skillIndex) => (
+                <div 
+                  class="skill-item"
+                  style={`--delay: ${categoryIndex * 0.3 + skillIndex * 0.1}s`}
+                >
+                  <div class="group flex flex-col items-center gap-2">
+                    <div class="p-2 rounded-lg transition-all duration-300 hover:scale-110 hover:-translate-y-1">
+                      <Icon 
+                        name={skill.icon} 
+                        class={`w-8 h-8 ${skill.className || ''}`}
+                      />
+                    </div>
+                    <span class="text-sm text-gray-600 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      {skill.name}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
+          <!-- Achievement Card - Aligned with its corresponding skill category -->
+          <div 
+            class="achievement-card mt-auto"
+            data-number={achievements[categoryIndex].number}
+            style={`--delay: ${categoryIndex * 0.2}s`}
+          >
+            <div class="group">
+              <div class="flex items-center justify-center gap-4 p-6">
+                <div class={`p-4 rounded-2xl bg-gradient-to-br ${achievements[categoryIndex].color} group-hover:scale-110 transition-transform duration-300`}>
+                  <Icon name={achievements[categoryIndex].icon} class="w-8 h-8 text-white" />
+                </div>
+                <div class="text-center">
+                  <h3 class="text-3xl font-bold text-gray-800 dark:text-gray-100 counter">
+                    {achievements[categoryIndex].number}
+                  </h3>
+                  <p class="text-gray-600 dark:text-gray-400">
+                    {achievements[categoryIndex].label}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .skill-category {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out forwards;
+    animation-delay: var(--delay);
+  }
+
+  .skill-item {
+    opacity: 0;
+    animation: scaleIn 0.5s ease-out forwards;
+    animation-delay: var(--delay);
+  }
+
+  .achievement-card {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .achievement-card.animate {
+    animation: achievementFadeIn 0.8s ease-out forwards;
+    animation-delay: var(--delay);
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes achievementFadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script>
+  // Counter animation function
+  function animateCounter(element: HTMLElement, target: number) {
+    let current = 0;
+    const duration = 2000; // 2 seconds
+    const step = target / (duration / 16); // 60 FPS
+
+    function update() {
+      current = Math.min(current + step, target);
+      element.textContent = Math.floor(current) + (current >= target ? '+' : '');
+      
+      if (current < target) {
+        requestAnimationFrame(update);
+      }
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  // Intersection Observer for achievements animation
+  const observerOptions: IntersectionObserverInit = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.target instanceof HTMLElement) {
+        entry.target.classList.add('animate');
+        
+        // Animate the counter
+        const countElement = entry.target.querySelector('.counter');
+        if (countElement instanceof HTMLElement) {
+          const finalNumber = entry.target.dataset.number?.replace('+', '') || '0';
+          animateCounter(countElement, parseInt(finalNumber));
+        }
+      }
+    });
+  }, observerOptions);
+
+  // Type guard function to check if element has dataset
+  function hasDataset(element: Element): element is HTMLElement {
+    return 'dataset' in element;
+  }
+
+  // Observe all achievement cards
+  document.querySelectorAll('.achievement-card').forEach((card) => {
+    if (hasDataset(card)) {
+      observer.observe(card);
+    }
+  });
+</script>

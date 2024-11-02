@@ -6,15 +6,17 @@ const projects = [
   {
     title: "Project One",
     description: "A full-stack web application built with modern technologies.",
-    tags: ["React", "Node.js", "MongoDB"]
-  }
-  // Add more projects as needed
+    image: "/project1.jpg",
+    tags: ["React", "Node.js", "MongoDB"],
+    link: "#"
+  },
+  // Add more projects...
 ];
 ---
 
-<section id="projects" class="py-32 bg-white dark:bg-gray-900">
+<section id="projects" class="py-32 bg-gray-50 dark:bg-gray-800/50">
   <div class="container mx-auto px-6">
-    <AnimateIn client:visible animation="slideUp">
+    <AnimateIn client:load animation="slideUp">
       <h2 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
         Featured Projects
       </h2>
@@ -23,7 +25,12 @@ const projects = [
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {projects.map((project, index) => (
         <AnimateIn client:visible animation="fadeIn" delay={index * 0.1}>
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden
+                      hover:-translate-y-1 transition-all duration-300">
+            <div class="relative h-48">
+              <img src={project.image} alt={project.title} 
+                   class="w-full h-full object-cover" />
+            </div>
             <div class="p-6">
               <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">
                 {project.title}
@@ -33,7 +40,8 @@ const projects = [
               </p>
               <div class="flex flex-wrap gap-2">
                 {project.tags.map(tag => (
-                  <span class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-sm">
+                  <span class="px-3 py-1 bg-gray-100 dark:bg-gray-800 
+                               text-gray-700 dark:text-gray-300 rounded-full text-sm">
                     {tag}
                   </span>
                 ))}

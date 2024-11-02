@@ -9,3 +9,13 @@ interface ImportMetaEnv {
   interface ImportMeta {
     readonly env: ImportMetaEnv;
 }
+
+declare module 'virtual:astro-icon' {
+  interface IconComponent {
+    name: string;
+    pack?: string;
+    class?: string;
+  }
+  const Icon: (props: IconComponent) => any;
+  export { Icon };
+}

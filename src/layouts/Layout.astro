@@ -1,8 +1,10 @@
 ---
 // src/layouts/Layout.astro
+import CustomCursor from '../components/effects/CustomCursor';
 import ClientThemeProvider from '../components/Theme/ClientThemeProvider';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import 'aos/dist/aos.css';
 
 interface Props {
   title: string;
@@ -10,8 +12,8 @@ interface Props {
 }
 
 const { 
-  title,
-  description = "Software Developer Portfolio"
+  title, 
+  description = "Shrihari Maheshwari - Full Stack Developer Portfolio" 
 } = Astro.props;
 ---
 
@@ -19,40 +21,102 @@ const {
 <html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
-    
+
     <script is:inline>
-      const theme = (() => {
-        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-          return localStorage.getItem('theme');
+      (function() {
+        function getInitialTheme() {
+          const savedTheme = localStorage.getItem('theme');
+          if (savedTheme) {
+            return savedTheme;
+          }
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         }
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          return 'dark';
-        }
-        return 'light';
+
+        const theme = getInitialTheme();
+        
+        document.documentElement.classList.remove('light', 'dark');
+        document.documentElement.classList.add(theme);
+        localStorage.setItem('theme', theme);
       })();
-    
-      if (theme === 'light') {
-        document.documentElement.classList.remove('dark');
-      } else {
-        document.documentElement.classList.add('dark');
-      }
-      window.localStorage.setItem('theme', theme);
     </script>
   </head>
-  <body class="bg-white dark:bg-gray-900">
+  <body>
     <ClientThemeProvider client:load>
-      <div class="min-h-screen flex flex-col">
+      <div class="min-h-screen flex flex-col relative bg-white dark:bg-gray-900">
+        <CustomCursor client:only="react" />
         <Navbar />
-        <main class="flex-1 pt-16">
+        <main class="flex-1">
           <slot />
         </main>
         <Footer />
       </div>
     </ClientThemeProvider>
+
+    <script define:vars={{ someVar: 'value' }}>
+      // Create a separate module for AOS initialization
+      const initializeAOS = async () => {
+        try {
+          const AOS = (await import('aos')).default;
+          const aos = AOS;
+
+          aos.init({
+            duration: 800,
+            once: true,
+            offset: 100,
+            easing: 'ease-out-cubic',
+            delay: 50,
+            disable: window.innerWidth < 768,
+            mirror: false,
+            anchorPlacement: 'top-bottom',
+          });
+
+          return aos;
+        } catch (error) {
+          console.error('Error initializing AOS:', error);
+          return null;
+        }
+      };
+
+      let aosInstance = null;
+      let resizeTimer = null;
+
+      // Initialize AOS on page load
+      document.addEventListener('astro:page-load', async () => {
+        aosInstance = await initializeAOS();
+      });
+
+      // Refresh AOS on view transitions
+      document.addEventListener('astro:after-swap', () => {
+        if (aosInstance) {
+          aosInstance.refresh();
+        }
+      });
+
+      // Handle theme changes
+      document.addEventListener('theme-change', () => {
+        if (aosInstance) {
+          setTimeout(() => {
+            aosInstance.refresh();
+          }, 300);
+        }
+      });
+
+      // Handle resize events
+      window.addEventListener('resize', () => {
+        if (resizeTimer) {
+          clearTimeout(resizeTimer);
+        }
+        
+        resizeTimer = setTimeout(() => {
+          if (aosInstance) {
+            aosInstance.refresh();
+          }
+        }, 250);
+      });
+    </script>
   </body>
 </html>

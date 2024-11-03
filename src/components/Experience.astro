@@ -1,58 +1,347 @@
 ---
 // src/components/sections/Experience.astro
-import AnimateIn from './animations/AnimateIn';
+import { Icon } from 'astro-icon/components';
+
+interface Metric {
+  label: string;
+  value: string;
+  prefix?: string;
+  suffix?: string;
+}
+
+interface Technology {
+  name: string;
+  icon: string;
+  darkMode?: string;
+}
 
 const experiences = [
   {
-    title: "Senior Software Engineer",
-    company: "Tech Company",
-    period: "2021 - Present",
+    title: "Cloud Application Software Engineer Co-op",
+    company: "Shure",
+    location: "Chicago, USA",
+    period: "September 2024 - Present",
     description: [
-      "Led the development of a microservices architecture",
-      "Mentored junior developers and conducted code reviews",
-      "Implemented CI/CD pipelines reducing deployment time by 60%"
+      "Developed a new library for handling audio and transcription files, ensuring seamless integration with the existing filetype service"
     ],
-    tags: ["React", "Node.js", "AWS", "Docker"]
+    metrics: [
+      { label: "Processing Efficiency", value: "20", suffix: "% Improvement" }
+    ],
+    technologies: [
+      { name: "AWS", icon: "logos:aws", darkMode: "dark:bg-white dark:p-1 dark:rounded" },
+      { name: "Typescript", icon: "logos:typescript-icon" },
+      { name: "NestJs", icon: "logos:nestjs" }
+    ]
+  },
+  {
+    title: "Cloud Application Software Engineer Intern",
+    company: "Shure",
+    location: "Chicago, USA",
+    period: "May 2024 - August 2024",
+    description: [
+      "Engineered scalable real-time audio transcription system using AWS",
+      "Integrated custom denoising algorithm, boosting accuracy by 15% for 1000+ daily users",
+      "Implemented blue-green deployment strategy with AWS ECS, reducing system downtime by 99%"
+    ],
+    metrics: [
+      { label: "Transcription Accuracy", value: "95", suffix: "%" },
+      { label: "System Downtime", value: "99", suffix: "% Reduction" },
+      { label: "Response Time", value: "50", suffix: "% Faster" }
+    ],
+    technologies: [
+      { name: "AWS", icon: "logos:aws", darkMode: "dark:bg-white dark:p-1 dark:rounded" },
+      { name: "Angular", icon: "logos:angular-icon", darkMode: "dark:bg-white dark:p-1 dark:rounded" },
+      { name: "Docker", icon: "logos:docker-icon" }
+    ]
+  },
+  {
+    title: "Software Engineer",
+    company: "Wolters Kluwer",
+    location: "Pune, India",
+    period: "October 2021 - May 2023",
+    description: [
+      "Enhanced resource utilization using AWS CloudWatch, CloudTrail, and AWS Config",
+      "Redesigned DR project using serverless functions and API integration",
+      "Implemented AWS CloudFormation for automated deployments",
+      "Orchestrated Amazon Athena setup for seamless data warehousing"
+    ],
+    metrics: [
+      { label: "Service Uptime", value: "20", suffix: "% Improvement" },
+      { label: "Cost Reduction", value: "20", suffix: "%" },
+      { label: "Query Response", value: "40", suffix: "% Faster" }
+    ],
+    technologies: [
+      { name: "AWS", icon: "logos:aws", darkMode: "dark:bg-white dark:p-1 dark:rounded" },
+      { name: "Python", icon: "logos:python" },
+      { name: "Javascript", icon: "logos:javascript" }
+    ]
+  },
+  {
+    title: "Associate Software Engineer",
+    company: "Wolters Kluwer",
+    location: "Pune, India",
+    period: "October 2020 - October 2021",
+    description: [
+      "Managed 5000+ DaaS solutions for global clients",
+      "Consolidated project updates into visually impactful reports",
+      "Achieved 100% on-time project delivery through effective milestone tracking"
+    ],
+    metrics: [
+      { label: "DaaS Solutions", value: "5000", prefix: "+" },
+      { label: "Project Delivery", value: "100", suffix: "%" },
+      { label: "Client Satisfaction", value: "95", suffix: "%" }
+    ],
+    technologies: [
+      { name: "Azure", icon: "logos:microsoft-azure" },
+      { name: "AWS", icon: "logos:aws", darkMode: "dark:bg-white dark:p-1 dark:rounded" },
+      { name: "Git", icon: "logos:git-icon", darkMode: "dark:bg-white dark:p-1 dark:rounded" }
+    ]
   }
 ];
 ---
 
-<section id="experience" class="py-32 bg-gray-50 dark:bg-gray-800">
-  <div class="container mx-auto px-6">
-    <AnimateIn client:visible animation="slideUp">
-      <h2 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
-        Experience
-      </h2>
-    </AnimateIn>
+<style>
+  .experience-card {
+    opacity: 0;
+    transform: translateY(20px);
+  }
 
-    <div class="max-w-4xl mx-auto space-y-8">
-      {experiences.map((job, index) => (
-        <AnimateIn client:visible animation="slideLeft" delay={index * 0.1}>
-          <div class="bg-white dark:bg-gray-900 rounded-lg p-6 shadow-lg">
-            <div class="flex flex-col sm:flex-row justify-between mb-4">
+  .experience-line {
+    @apply absolute h-full w-0.5;
+    left: -32px;
+    transform: scaleY(0);
+    transform-origin: top;
+    @apply bg-gradient-to-b from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600;
+  }
+
+  /* Main dot */
+  .experience-line::before {
+    content: '';
+    @apply absolute w-3 h-3 rounded-full bg-blue-500 dark:bg-blue-400;
+    left: -4px;
+    top: 24px;
+    transition: all 0.3s ease;
+  }
+
+  /* Inner pulse circle */
+  .experience-line::after {
+    content: '';
+    @apply absolute rounded-full;
+    width: 32px;
+    height: 32px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+    left: -16px;
+    top: 14px;
+    transform: scale(0);
+    transition: transform 0.3s ease;
+  }
+
+  /* Outer pulse circle */
+  .pulse-circle {
+    @apply absolute rounded-full;
+    width: 48px;
+    height: 48px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+    left: -24px;
+    top: 6px;
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  .experience-card:hover .experience-line::before {
+    @apply scale-150;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  }
+
+  .experience-card:hover .experience-line::after {
+    transform: scale(1);
+    animation: pulseInner 2s infinite;
+  }
+
+  .experience-card:hover .pulse-circle {
+    animation: pulseOuter 2s infinite 0.3s;
+  }
+
+  .experience-line-highlight {
+    @apply absolute w-0.5 bg-gradient-to-b from-blue-500 to-purple-500;
+    left: -32px;
+    height: 0;
+    opacity: 0;
+    transition: all 0.5s ease-out;
+  }
+
+  .experience-card:hover .experience-line-highlight {
+    height: 100%;
+    opacity: 1;
+  }
+
+  .section-title {
+    @apply text-4xl font-bold text-gray-900 dark:text-white relative opacity-0;
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  @keyframes pulseInner {
+    0% {
+      transform: scale(0.8);
+      opacity: 0.5;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.3;
+    }
+    100% {
+      transform: scale(0.8);
+      opacity: 0.5;
+    }
+  }
+
+  @keyframes pulseOuter {
+    0% {
+      transform: scale(0.8);
+      opacity: 0.3;
+    }
+    50% {
+      transform: scale(1.5);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(0.8);
+      opacity: 0.3;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from { transform: translateX(-50%) scaleX(0); }
+    to { transform: translateX(-50%) scaleX(1); }
+  }
+
+  @keyframes lineGrow {
+    from { 
+      transform: scaleY(0);
+      opacity: 0;
+    }
+    to { 
+      transform: scaleY(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes cardFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script>
+  const setupAnimations = () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting && entry.target instanceof HTMLElement) {
+          entry.target.style.animation = `cardFadeIn 0.6s ease-out ${index * 0.2}s forwards`;
+          
+          const line = entry.target.querySelector('.experience-line');
+          if (line instanceof HTMLElement) {
+            line.style.animation = `lineGrow 0.6s ease-out ${index * 0.2}s forwards`;
+          }
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '50px'
+    });
+
+    document.querySelectorAll('.experience-card').forEach((card) => {
+      observer.observe(card);
+    });
+  };
+
+  document.addEventListener('DOMContentLoaded', setupAnimations);
+</script>
+
+<section id="experience" class="mx-auto max-w-6xl px-4 py-12">
+  <div class="text-center mb-16">
+    <h2 class="section-title">Experience</h2>
+  </div>
+
+  <div class="space-y-12">
+    {experiences.map((job) => (
+      <div class="experience-card">
+        <div class="relative ml-12">
+          <div class="experience-line"></div>
+          <div class="experience-line-highlight"></div>
+          <div class="pulse-circle"></div>
+          <div class="rounded-lg p-6 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800">
+            <div class="flex flex-wrap justify-between items-start gap-2 mb-4">
               <div>
-                <h3 class="text-xl font-bold text-gray-900 dark:text-white">{job.title}</h3>
-                <p class="text-blue-600 dark:text-blue-400">{job.company}</p>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">{job.title}</h3>
+                <div class="flex flex-wrap items-center gap-2 text-sm">
+                  <span class="text-blue-600 dark:text-blue-400">{job.company}</span>
+                  <span class="text-gray-400">•</span>
+                  <span class="text-gray-600 dark:text-gray-400">{job.location}</span>
+                </div>
               </div>
-              <p class="text-gray-600 dark:text-gray-400">{job.period}</p>
+              <span class="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50 px-3 py-1 rounded-full">
+                {job.period}
+              </span>
             </div>
 
-            <ul class="mb-4 space-y-2 list-disc list-inside text-gray-600 dark:text-gray-300">
+            <div class="grid grid-cols-3 gap-3 mb-6">
+              {job.metrics.map(metric => (
+                <div class="bg-gray-50 dark:bg-gray-800/30 p-2 rounded-lg border border-gray-100 dark:border-gray-700/50">
+                  <div class="text-sm font-semibold text-blue-600 dark:text-blue-400">
+                    {metric.prefix}{metric.value}{metric.suffix}
+                  </div>
+                  <div class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                    {metric.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div class="flex flex-wrap gap-12 mb-8">
+              {job.technologies.map(tech => (
+                <div class="flex flex-col items-center relative group">
+                  <div class="p-2 transition-all duration-300 hover:scale-110 hover:-translate-y-1">
+                    <Icon 
+                      name={tech.icon} 
+                      class={`w-7 h-7 ${tech.darkMode || ''}`}
+                    />
+                  </div>
+                  <span class="absolute -bottom-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
+                    {tech.name}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <ul class="space-y-2 text-gray-600 dark:text-gray-300">
               {job.description.map(item => (
-                <li>{item}</li>
+                <li class="pl-4 relative before:absolute before:left-0 before:top-2 
+                           before:w-1.5 before:h-1.5 before:bg-blue-500 before:rounded-full">
+                  {item}
+                </li>
               ))}
             </ul>
-
-            <div class="flex flex-wrap gap-2">
-              {job.tags.map(tag => (
-                <span class="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full">
-                  {tag}
-                </span>
-              ))}
-            </div>
           </div>
-        </AnimateIn>
-      ))}
-    </div>
+        </div>
+      </div>
+    ))}
   </div>
 </section>

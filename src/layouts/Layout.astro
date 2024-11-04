@@ -4,6 +4,7 @@ import CustomCursor from '../components/effects/CustomCursor';
 import ClientThemeProvider from '../components/Theme/ClientThemeProvider';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import ScrollToTop from '../components/ScrollToTop.astro';
 import 'aos/dist/aos.css';
 
 interface Props {
@@ -53,6 +54,7 @@ const {
           <slot />
         </main>
         <Footer />
+        <ScrollToTop />
       </div>
     </ClientThemeProvider>
 

@@ -3,29 +3,30 @@
 import AnimateIn from './animations/AnimateIn';
 
 const technologies = [
-  { name: "TypeScript", color: "text-blue-600 dark:text-blue-400" },
-  { name: "React", color: "text-cyan-600 dark:text-cyan-400" },
-  { name: "Nest.js", color: "text-green-600 dark:text-green-400" },
-  { name: "Python", color: "text-yellow-600 dark:text-yellow-400" },
-  { name: "AWS", color: "text-orange-600 dark:text-orange-400" }
+  { name: "TypeScript", color: "text-blue-500 dark:text-blue-400" },
+  { name: "React", color: "text-cyan-500 dark:text-cyan-400" },
+  { name: "Nest.js", color: "text-green-500 dark:text-green-400" },
+  { name: "Python", color: "text-yellow-500 dark:text-yellow-400" },
+  { name: "AWS", color: "text-orange-500 dark:text-orange-400" }
 ];
 ---
 
-<section id="home" class="min-h-screen flex items-center justify-center relative bg-white dark:bg-gray-900">
+<section id="home" class="min-h-screen flex items-center justify-center relative bg-white dark:bg-gray-900 transition-colors duration-300">
   <div class="absolute inset-0 bg-gradient-to-b from-blue-50/20 to-transparent dark:from-blue-900/10 dark:to-transparent"></div>
   
-  <div class="container mx-auto px-6 relative z-10">
+  <div class="container mx-auto px-4 max-w-6xl relative z-10">
     <div class="text-center">
       <AnimateIn client:load animation="fadeIn">
-        <span class="inline-block px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 
-                     text-blue-600 dark:text-blue-400 text-sm font-medium mb-6">
+        <span class="inline-block px-4 py-2 rounded-lg bg-blue-100/50 dark:bg-blue-900/30 
+                     text-blue-600 dark:text-blue-400 text-sm font-medium mb-6
+                     border border-blue-200/50 dark:border-blue-700/50">
           Open to Work
         </span>
       </AnimateIn>
 
       <AnimateIn client:load animation="slideUp" delay={0.1}>
         <h1 class="text-4.5xl md:text-6xl font-bold mb-6 text-gray-900 dark:text-white">
-          Hi, I'm <span class="text-blue-600 dark:text-blue-400">Shrihari</span>
+          Hi, I'm <span class="gradient-text">Shrihari</span>
         </h1>
       </AnimateIn>
       
@@ -45,20 +46,63 @@ const technologies = [
       <AnimateIn client:load animation="slideUp" delay={0.4}>
         <div class="flex flex-col sm:flex-row justify-center gap-4 mb-12">
           <a href="#contact" 
-             class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:-translate-y-1 
-                    transition-all duration-300 hover:bg-blue-700 hover:shadow-lg">
-            Let's Collaborate
+             class="group relative inline-flex items-center justify-center px-8 py-4
+                    bg-gradient-to-r from-blue-500 to-blue-600
+                    dark:from-blue-600 dark:to-blue-500
+                    text-white rounded-lg font-medium
+                    transition-all duration-300 ease-out
+                    hover:-translate-y-1
+                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
+                    dark:focus:ring-offset-gray-900">
+            <span class="relative flex items-center gap-2">
+              Let's Collaborate
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="2" 
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
+            </span>
           </a>
+          
           <a href="#projects"
-             class="px-8 py-3 border border-gray-300 dark:border-gray-700 text-gray-900 
-                    dark:text-white rounded-lg hover:border-blue-600 dark:hover:border-blue-400 
-                    hover:-translate-y-1 transition-all duration-300 hover:shadow-lg">
-            View Projects
+             class="group relative inline-flex items-center justify-center px-8 py-4
+                    text-gray-900 dark:text-white rounded-lg font-medium
+                    border-2 border-gray-300 dark:border-gray-700
+                    hover:border-blue-500 dark:hover:border-blue-400
+                    hover:text-blue-600 dark:hover:text-blue-400
+                    hover:-translate-y-1 transition-all duration-300
+                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
+                    dark:focus:ring-offset-gray-900">
+            <span class="flex items-center gap-2">
+              View Projects
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="2" 
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </span>
           </a>
         </div>
       </AnimateIn>
 
-      {/* Tech Stack Section */}
       <AnimateIn client:load animation="slideUp" delay={0.5}>
         <div class="max-w-3xl mx-auto">
           <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
@@ -66,9 +110,11 @@ const technologies = [
           </p>
           <div class="flex flex-wrap justify-center items-center gap-3">
             {technologies.map((tech) => (
-              <span class={`px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 
+              <span class={`px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-800/50 
                            ${tech.color} font-medium text-sm
+                           border border-gray-200/50 dark:border-gray-700/50
                            transform hover:-translate-y-1 transition-all duration-300 
+                           hover:border-blue-500/50 dark:hover:border-blue-400/50
                            hover:shadow-md cursor-default`}>
                 {tech.name}
               </span>
@@ -79,12 +125,17 @@ const technologies = [
     </div>
   </div>
 
-  {/* Optional: Decorative dots/grid pattern */}
   <div class="absolute inset-0 bg-grid-gray-900/[0.02] dark:bg-grid-gray-100/[0.02] pointer-events-none"></div>
 </section>
 
 <style>
-  /* Grid background pattern */
+  /* Simple gradient text effect */
+  .gradient-text {
+    @apply text-transparent bg-clip-text;
+    background-image: linear-gradient(to right, #3B82F6, #60A5FA);
+  }
+
+  /* Grid background patterns */
   .bg-grid-gray-900 {
     mask-image: linear-gradient(to bottom, transparent, black);
     background-image: 

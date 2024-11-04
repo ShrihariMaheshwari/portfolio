@@ -1,75 +1,285 @@
 ---
-// src/components/sections/Contact.astro
-import AnimateIn from './animations/AnimateIn';
+import { Icon } from 'astro-icon/components';
+
+type InputType = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local' | 'month' | 'week' | 'textarea';
+
+interface FormField {
+  id: string;
+  label: string;
+  type: InputType;
+  placeholder: string;
+  rows?: number;
+}
+
+const formFields: FormField[] = [
+  {
+    id: 'name',
+    label: 'Name',
+    type: 'text',
+    placeholder: 'John Doe'
+  },
+  {
+    id: 'email',
+    label: 'Email',
+    type: 'email',
+    placeholder: 'john@example.com'
+  },
+  {
+    id: 'subject',
+    label: 'Subject',
+    type: 'text',
+    placeholder: 'Project Discussion'
+  },
+  {
+    id: 'message',
+    label: 'Message',
+    type: 'textarea',
+    placeholder: 'Tell me about your project...',
+    rows: 4
+  }
+];
 ---
 
-<section id="contact" class="py-32 bg-white dark:bg-gray-900">
-  <div class="container mx-auto px-6">
-    <AnimateIn client:visible animation="slideUp">
-      <h2 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
-        Get In Touch
+<section id="contact" class="py-24 bg-white dark:bg-gray-900 transition-colors duration-300">
+  <div class="container mx-auto px-4 max-w-6xl">
+    <div class="text-center mb-16 animate-fade-in">
+      <h2 class="text-4xl font-bold mb-6 text-gray-900 dark:text-white">
+        Let's Create Something Together
       </h2>
-    </AnimateIn>
+      <p class="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+        Have a project in mind?
+        Drop me a message, and I'll get back to you as soon as possible.
+      </p>
+    </div>
 
-    <AnimateIn client:visible animation="fadeIn" delay={0.2}>
-      <div class="max-w-lg mx-auto">
-        <form class="space-y-6">
-          <div>
-            <AnimateIn client:visible animation="slideUp" delay={0.2}>
-              <label class="block text-sm font-medium mb-2 text-gray-900 dark:text-white">
-                Name
+    <div class="max-w-2xl mx-auto">
+      <form class="space-y-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {formFields.slice(0, 2).map((field, index) => (
+            <div class="form-group animate-slide-up" style={`--delay: ${0.2 + index * 0.1}s`}>
+              <div class="relative">
+                <input
+                  type={field.type === 'textarea' ? undefined : field.type}
+                  id={field.id}
+                  class="peer w-full px-4 pt-6 pb-2 text-gray-900 dark:text-white 
+                         bg-transparent rounded-lg
+                         border-2 border-gray-300 dark:border-gray-700
+                         focus:border-blue-500 dark:focus:border-blue-400
+                         focus:ring-0 transition-all duration-300
+                         placeholder-transparent"
+                  placeholder={field.placeholder}
+                />
+                <label
+                  for={field.id}
+                  class="absolute text-sm text-gray-500 dark:text-gray-400
+                         duration-300 transform -translate-y-3 z-10
+                         origin-[0] left-4 top-4
+                         peer-placeholder-shown:translate-y-0 
+                         peer-placeholder-shown:text-base 
+                         peer-focus:text-sm peer-focus:-translate-y-3
+                         peer-focus:text-blue-500"
+                >
+                  {field.label}
+                </label>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {formFields.slice(2).map((field, index) => (
+          <div class="form-group animate-slide-up" style={`--delay: ${0.4 + index * 0.1}s`}>
+            <div class="relative">
+              {field.type === 'textarea' ? (
+                <textarea
+                  id={field.id}
+                  rows={field.rows}
+                  class="peer w-full px-4 pt-6 pb-2 text-gray-900 dark:text-white 
+                         bg-transparent rounded-lg
+                         border-2 border-gray-300 dark:border-gray-700
+                         focus:border-blue-500 dark:focus:border-blue-400
+                         focus:ring-0 transition-all duration-300
+                         placeholder-transparent resize-none"
+                  placeholder={field.placeholder}
+                ></textarea>
+              ) : (
+                <input
+                  type={field.type}
+                  id={field.id}
+                  class="peer w-full px-4 pt-6 pb-2 text-gray-900 dark:text-white 
+                         bg-transparent rounded-lg
+                         border-2 border-gray-300 dark:border-gray-700
+                         focus:border-blue-500 dark:focus:border-blue-400
+                         focus:ring-0 transition-all duration-300
+                         placeholder-transparent"
+                  placeholder={field.placeholder}
+                />
+              )}
+              <label
+                for={field.id}
+                class="absolute text-sm text-gray-500 dark:text-gray-400
+                       duration-300 transform -translate-y-3 z-10
+                       origin-[0] left-4 top-4
+                       peer-placeholder-shown:translate-y-0 
+                       peer-placeholder-shown:text-base 
+                       peer-focus:text-sm peer-focus:-translate-y-3
+                       peer-focus:text-blue-500"
+              >
+                {field.label}
               </label>
-              <input
-                type="text"
-                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 
-                       bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                       focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Your name"
-              />
-            </AnimateIn>
+            </div>
           </div>
+        ))}
 
-          <div>
-            <AnimateIn client:visible animation="slideUp" delay={0.3}>
-              <label class="block text-sm font-medium mb-2 text-gray-900 dark:text-white">
-                Email
-              </label>
-              <input
-                type="email"
-                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 
-                       bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                       focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="your@email.com"
-              />
-            </AnimateIn>
-          </div>
-
-          <div>
-            <AnimateIn client:visible animation="slideUp" delay={0.4}>
-              <label class="block text-sm font-medium mb-2 text-gray-900 dark:text-white">
-                Message
-              </label>
-              <textarea
-                rows="4"
-                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 
-                       bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                       focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Your message..."
-              ></textarea>
-            </AnimateIn>
-          </div>
-
-          <AnimateIn client:visible animation="slideUp" delay={0.5}>
-            <button
-              type="submit"
-              class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-medium 
-                     hover:bg-blue-700 transition-all hover:-translate-y-1"
-            >
-              Send Message
-            </button>
-          </AnimateIn>
-        </form>
-      </div>
-    </AnimateIn>
+        <div class="animate-slide-up" style="--delay: 0.6s">
+          <button
+            type="submit"
+            class="group relative w-full px-6 py-4 bg-gradient-to-br from-blue-500 to-blue-600 
+                   text-white rounded-lg font-medium overflow-hidden
+                   transition-all duration-300 hover:-translate-y-1
+                   focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
+                   dark:focus:ring-offset-gray-900"
+          >
+            <span class="relative z-10 flex items-center justify-center gap-2">
+              <span>Send Message</span>
+              <Icon name="mdi:send" class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </span>
+            <div class="absolute inset-0 -z-10 bg-gradient-to-br from-blue-600 to-blue-700 
+                      opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </section>
+
+<style>
+  .animate-fade-in {
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 0.6s ease-out forwards;
+    animation-delay: var(--delay, 0s);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Custom autofill styles */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: inherit;
+    -webkit-box-shadow: 0 0 0px 1000px transparent inset;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+</style>
+
+<script>
+// Type guards
+function isHTMLFormElement(element: Element): element is HTMLFormElement {
+  return element instanceof HTMLFormElement;
+}
+
+function isFormElement(element: Element): element is HTMLInputElement | HTMLTextAreaElement {
+  return element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement;
+}
+
+// Form submission handler
+document.querySelectorAll('form').forEach(formElement => {
+  if (!isHTMLFormElement(formElement)) return;
+
+  formElement.addEventListener('submit', async (e: SubmitEvent) => {
+    e.preventDefault();
+    
+    const form = e.target as HTMLFormElement;
+    const button = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+    if (!button) return;
+    
+    const originalContent = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = `
+      <span class="flex items-center gap-2">
+        <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+        Sending...
+      </span>
+    `;
+
+    try {
+      // Simulate form submission
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Show success state (optional)
+      button.innerHTML = `
+        <span class="flex items-center gap-2">
+          <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+          Sent!
+        </span>
+      `;
+
+      // Reset form after delay
+      setTimeout(() => {
+        form.reset();
+        button.disabled = false;
+        button.innerHTML = originalContent;
+      }, 2000);
+    } catch (error) {
+      // Handle error state
+      button.innerHTML = `
+        <span class="flex items-center gap-2 text-red-500">
+          <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+          </svg>
+          Error
+        </span>
+      `;
+      
+      // Reset button after delay
+      setTimeout(() => {
+        button.disabled = false;
+        button.innerHTML = originalContent;
+      }, 2000);
+    }
+  });
+});
+
+// Handle input states
+document.querySelectorAll('input, textarea').forEach(element => {
+  if (!isFormElement(element)) return;
+  
+  const updateState = () => {
+    if (element.value) {
+      element.classList.add('has-value');
+    } else {
+      element.classList.remove('has-value');
+    }
+  };
+
+  element.addEventListener('input', updateState);
+  element.addEventListener('change', updateState);
+  
+  // Initial state
+  updateState();
+});
+</script>

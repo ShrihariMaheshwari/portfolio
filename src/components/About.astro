@@ -13,6 +13,13 @@ interface SkillCategory {
   skills: Skill[];
 }
 
+interface Achievement {
+  number: string;
+  label: string;
+  icon: string;
+  color: string;
+}
+
 const skills: SkillCategory[] = [
   {
     category: "Frontend Development",
@@ -52,7 +59,7 @@ const skills: SkillCategory[] = [
   }
 ];
 
-const achievements = [
+const achievements: Achievement[] = [
   { 
     number: "3+", 
     label: "Years Experience",
@@ -74,114 +81,101 @@ const achievements = [
 ];
 ---
 
-<div id="about" class="mx-auto max-w-6xl px-4 py-12">
-  <!-- Upper Section -->
-  <div class="text-center mb-20">
-    <h1 class="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
-      About Me
-    </h1>
-    <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
-      Full Stack Developer passionate about creating innovative web solutions and learning new technologies. 
-      Focused on building scalable and performant applications that solve real-world problems.
-    </p>
-  </div>
-  
-  <!-- Skills Section -->
-  <div class="mb-32">
-    <h2 class="text-3xl font-bold mb-16 text-center text-[#3B82F6] dark:text-[#60A5FA]">
-      Technical Skills
-    </h2>
-    <!-- Skills and Achievements Combined Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-16">
-      {skills.map((category, categoryIndex) => (
-        <div class="flex flex-col">
-          <!-- Skill Category -->
-          <div class="skill-category mb-8" style={`--delay: ${categoryIndex * 0.3}s`}>
-            <h3 class="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-100 text-center">
+<section id="about" class="py-24 bg-white dark:bg-gray-900 transition-colors duration-300">
+  <div class="container mx-auto px-4 max-w-6xl">
+    <div class="text-center mb-16 animate-fade-in">
+      <h2 class="text-4xl font-bold mb-6 text-gray-900 dark:text-white">
+        About Me
+      </h2>
+      <p class="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+        Full Stack Developer passionate about creating innovative web solutions and learning new technologies. 
+        Focused on building scalable and performant applications that solve real-world problems.
+      </p>
+    </div>
+    
+    <div class="mb-16">
+      <h3 class="text-3xl font-bold mb-8 text-center text-blue-600 dark:text-blue-400 animate-fade-in">
+        Technical Skills
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+        {skills.map((category, index) => (
+          <div class="skill-category animate-slide-up" style={`--delay: ${index * 0.1}s`}>
+            <h4 class="text-xl font-semibold mb-4 text-center text-gray-800 dark:text-gray-200">
               {category.category}
-            </h3>
-            <p class="text-gray-600 dark:text-gray-400 text-center mb-8 text-md">
+            </h4>
+            <p class="text-gray-600 dark:text-gray-400 text-center mb-6 text-sm">
               {category.description}
             </p>
-            <div class="grid grid-cols-3 gap-6 mb-8">
-              {category.skills.map((skill, skillIndex) => (
-                <div 
-                  class="skill-item"
-                  style={`--delay: ${categoryIndex * 0.3 + skillIndex * 0.1}s`}
-                >
-                  <div class="group flex flex-col items-center gap-2">
-                    <div class="p-2 rounded-lg transition-all duration-300 hover:scale-110 hover:-translate-y-1">
-                      <Icon 
-                        name={skill.icon} 
-                        class={`w-8 h-8 ${skill.className || ''}`}
-                      />
-                    </div>
-                    <span class="text-sm text-gray-600 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      {skill.name}
-                    </span>
+            <div class="grid grid-cols-3 gap-6">
+              {category.skills.map((skill) => (
+                <div class="group flex flex-col items-center">
+                  <div class="p-2 transition-all duration-300 hover:scale-110 hover:-translate-y-1">
+                    <Icon 
+                      name={skill.icon} 
+                      class={`w-8 h-8 ${skill.className || ''}`}
+                    />
                   </div>
+                  <span class="mt-2 text-xs text-gray-600 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    {skill.name}
+                  </span>
                 </div>
               ))}
             </div>
           </div>
+        ))}
+      </div>
+    </div>
 
-          <!-- Achievement Card - Aligned with its corresponding skill category -->
-          <div 
-            class="achievement-card mt-auto"
-            data-number={achievements[categoryIndex].number}
-            style={`--delay: ${categoryIndex * 0.2}s`}
-          >
-            <div class="group">
-              <div class="flex items-center justify-center gap-4 p-6">
-                <div class={`p-4 rounded-2xl bg-gradient-to-br ${achievements[categoryIndex].color} group-hover:scale-110 transition-transform duration-300`}>
-                  <Icon name={achievements[categoryIndex].icon} class="w-8 h-8 text-white" />
-                </div>
-                <div class="text-center">
-                  <h3 class="text-3xl font-bold text-gray-800 dark:text-gray-100 counter">
-                    {achievements[categoryIndex].number}
-                  </h3>
-                  <p class="text-gray-600 dark:text-gray-400">
-                    {achievements[categoryIndex].label}
-                  </p>
-                </div>
+    <div>
+      <h3 class="text-3xl font-bold mb-8 text-center text-blue-600 dark:text-blue-400 animate-fade-in">
+        Achievements
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {achievements.map((achievement, index) => (
+          <div class="achievement-card animate-slide-up" style={`--delay: ${index * 0.1}s`} data-number={achievement.number}>
+            <div class="flex items-center justify-center gap-4">
+              <div class={`p-4 rounded-2xl bg-gradient-to-br ${achievement.color}`}>
+                <Icon name={achievement.icon} class="w-8 h-8 text-white" />
+              </div>
+              <div class="text-center">
+                <h4 class="text-3xl font-bold text-gray-800 dark:text-gray-200 counter">
+                  {achievement.number}
+                </h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  {achievement.label}
+                </p>
               </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   </div>
-</div>
+</section>
 
 <style>
-
-html {
-    scroll-padding-top: 65px; /* Adjust this value based on your header height */
-    scroll-behavior: smooth;
-  }
-  .skill-category {
+  .animate-fade-in {
     opacity: 0;
-    animation: fadeInUp 0.6s ease-out forwards;
-    animation-delay: var(--delay);
+    animation: fadeIn 0.6s ease-out forwards;
   }
 
-  .skill-item {
-    opacity: 0;
-    animation: scaleIn 0.5s ease-out forwards;
-    animation-delay: var(--delay);
-  }
-
-  .achievement-card {
+  .animate-slide-up {
     opacity: 0;
     transform: translateY(20px);
+    animation: slideUp 0.6s ease-out forwards;
+    animation-delay: var(--delay, 0s);
   }
 
-  .achievement-card.animate {
-    animation: achievementFadeIn 0.8s ease-out forwards;
-    animation-delay: var(--delay);
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 
-  @keyframes fadeInUp {
+  @keyframes slideUp {
     from {
       opacity: 0;
       transform: translateY(20px);
@@ -192,37 +186,19 @@ html {
     }
   }
 
-  @keyframes scaleIn {
-    from {
-      opacity: 0;
-      transform: scale(0.9);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  @keyframes achievementFadeIn {
-    0% {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .skill-category,
+  .achievement-card {
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
   }
 </style>
 
 <script>
-  // Counter animation function
-  function animateCounter(element: HTMLElement, target: number) {
+  function animateCounter(element: HTMLElement, target: number): void {
     let current = 0;
-    const duration = 2000; // 2 seconds
-    const step = target / (duration / 16); // 60 FPS
+    const duration = 2000;
+    const step = target / (duration / 16);
 
-    function update() {
+    function update(): void {
       current = Math.min(current + step, target);
       element.textContent = Math.floor(current) + (current >= target ? '+' : '');
       
@@ -234,37 +210,25 @@ html {
     requestAnimationFrame(update);
   }
 
-  // Intersection Observer for achievements animation
-  const observerOptions: IntersectionObserverInit = {
-    root: null,
-    rootMargin: '0px',
-    threshold: 0.1
-  };
+  function isHTMLElement(element: Element): element is HTMLElement {
+    return element instanceof HTMLElement;
+  }
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting && entry.target instanceof HTMLElement) {
+      if (entry.isIntersecting && isHTMLElement(entry.target)) {
         entry.target.classList.add('animate');
         
-        // Animate the counter
         const countElement = entry.target.querySelector('.counter');
         if (countElement instanceof HTMLElement) {
           const finalNumber = entry.target.dataset.number?.replace('+', '') || '0';
-          animateCounter(countElement, parseInt(finalNumber));
+          animateCounter(countElement, parseInt(finalNumber, 10));
         }
       }
     });
-  }, observerOptions);
+  }, { threshold: 0.1 });
 
-  // Type guard function to check if element has dataset
-  function hasDataset(element: Element): element is HTMLElement {
-    return 'dataset' in element;
-  }
-
-  // Observe all achievement cards
-  document.querySelectorAll('.achievement-card').forEach((card) => {
-    if (hasDataset(card)) {
-      observer.observe(card);
-    }
+  document.querySelectorAll('.skill-category, .achievement-card').forEach((el) => {
+    observer.observe(el);
   });
 </script>

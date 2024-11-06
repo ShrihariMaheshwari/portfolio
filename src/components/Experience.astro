@@ -275,73 +275,79 @@ const experiences = [
   document.addEventListener('DOMContentLoaded', setupAnimations);
 </script>
 
-<section id="experience" class="mx-auto max-w-6xl px-4 py-24">
-  <div class="text-center mb-16">
-    <h2 class="section-title">Experience</h2>
-  </div>
+<section id="experience" class="relative min-h-screen py-24 bg-white dark:bg-[#0B1120] transition-colors duration-300">
+  <div class="absolute inset-0 bg-gradient-to-b from-blue-50/20 to-transparent dark:from-[#0B1120]/80 dark:to-[#0B1120]/30"></div>
 
-  <div class="space-y-12">
-    {experiences.map((job) => (
-      <div class="experience-card">
-        <div class="relative ml-12">
-          <div class="experience-line"></div>
-          <div class="experience-line-highlight"></div>
-          <div class="pulse-circle"></div>
-          <div class="rounded-lg p-6 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800">
-            <div class="flex flex-wrap justify-between items-start gap-2 mb-4">
-              <div>
-                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">{job.title}</h3>
-                <div class="flex flex-wrap items-center gap-2 text-sm">
-                  <span class="text-blue-600 dark:text-blue-400">{job.company}</span>
-                  <span class="text-gray-400">•</span>
-                  <span class="text-gray-600 dark:text-gray-400">{job.location}</span>
+  <div class="mx-auto max-w-6xl px-4 relative z-10">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">Experience</h2>
+    </div>
+
+    <div class="space-y-12">
+      {experiences.map((job) => (
+        <div class="experience-card">
+          <div class="relative ml-12">
+            <div class="experience-line"></div>
+            <div class="experience-line-highlight"></div>
+            <div class="pulse-circle"></div>
+            <div class="rounded-lg p-6 bg-white dark:bg-[#1a2333]/50 border border-gray-200/50 dark:border-gray-700/50 hover:border-blue-500/50 dark:hover:border-blue-400/50 transition-all duration-300">
+              <div class="flex flex-wrap justify-between items-start gap-2 mb-4">
+                <div>
+                  <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">{job.title}</h3>
+                  <div class="flex flex-wrap items-center gap-2 text-sm">
+                    <span class="text-blue-600 dark:text-blue-400">{job.company}</span>
+                    <span class="text-gray-400">•</span>
+                    <span class="text-gray-600 dark:text-gray-300">{job.location}</span>
+                  </div>
                 </div>
+                <span class="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-[#1a2333]/50 px-3 py-1 rounded-full border border-gray-200/50 dark:border-gray-700/50">
+                  {job.period}
+                </span>
               </div>
-              <span class="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50 px-3 py-1 rounded-full">
-                {job.period}
-              </span>
-            </div>
 
-            <div class="grid grid-cols-3 gap-3 mb-6">
-              {job.metrics.map(metric => (
-                <div class="bg-gray-50 dark:bg-gray-800/30 p-2 rounded-lg border border-gray-100 dark:border-gray-700/50">
-                  <div class="text-sm font-semibold text-blue-600 dark:text-blue-400">
-                    {metric.prefix}{metric.value}{metric.suffix}
+              <div class="grid grid-cols-3 gap-3 mb-6">
+                {job.metrics.map(metric => (
+                  <div class="bg-gray-50 dark:bg-[#1a2333]/50 p-2 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
+                    <div class="text-sm font-semibold text-blue-600 dark:text-blue-400">
+                      {metric.prefix}{metric.value}{metric.suffix}
+                    </div>
+                    <div class="text-xs text-gray-600 dark:text-gray-300 mt-0.5">
+                      {metric.label}
+                    </div>
                   </div>
-                  <div class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
-                    {metric.label}
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            <div class="flex flex-wrap gap-12 mb-8">
-              {job.technologies.map(tech => (
-                <div class="flex flex-col items-center relative group">
-                  <div class="p-2 transition-all duration-300 hover:scale-110 hover:-translate-y-1">
-                    <Icon 
-                      name={tech.icon} 
-                      class={`w-7 h-7 ${tech.darkMode || ''}`}
-                    />
+              <div class="flex flex-wrap gap-12 mb-8">
+                {job.technologies.map(tech => (
+                  <div class="flex flex-col items-center relative group">
+                    <div class="p-2 transition-all duration-300 hover:scale-110 hover:-translate-y-1">
+                      <Icon 
+                        name={tech.icon} 
+                        class={`w-7 h-7 ${tech.darkMode || ''}`}
+                      />
+                    </div>
+                    <span class="absolute -bottom-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">
+                      {tech.name}
+                    </span>
                   </div>
-                  <span class="absolute -bottom-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
-                    {tech.name}
-                  </span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            <ul class="space-y-2 text-gray-600 dark:text-gray-300">
-              {job.description.map(item => (
-                <li class="pl-4 relative before:absolute before:left-0 before:top-2 
-                           before:w-1.5 before:h-1.5 before:bg-blue-500 before:rounded-full">
-                  {item}
-                </li>
-              ))}
-            </ul>
+              <ul class="space-y-2 text-gray-600 dark:text-gray-300">
+                {job.description.map(item => (
+                  <li class="pl-4 relative before:absolute before:left-0 before:top-2 
+                             before:w-1.5 before:h-1.5 before:bg-blue-500 before:rounded-full">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-    ))}
+      ))}
+    </div>
   </div>
+
+  <div class="absolute inset-0 bg-grid-gray-900/[0.02] dark:bg-grid-gray-100/[0.02] pointer-events-none"></div>
 </section>

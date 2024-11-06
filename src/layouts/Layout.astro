@@ -5,6 +5,7 @@ import ClientThemeProvider from '../components/Theme/ClientThemeProvider';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import ScrollToTop from '../components/ScrollToTop.astro';
+import { Toaster } from 'react-hot-toast';
 import 'aos/dist/aos.css';
 
 interface Props {
@@ -55,8 +56,51 @@ const {
         </main>
         <Footer />
         <ScrollToTop />
+        <!-- Added Toaster component -->
+        <Toaster
+          client:load
+          position="bottom-right"
+          toastOptions={{
+            className: '',
+            style: {
+              background: 'var(--toast-bg)',
+              color: 'var(--toast-color)',
+              border: '1px solid var(--toast-border)',
+            },
+            success: {
+              duration: 5000,
+              iconTheme: {
+                primary: '#10B981',
+                secondary: '#FFFFFF',
+              },
+            },
+            error: {
+              duration: 5000,
+              iconTheme: {
+                primary: '#EF4444',
+                secondary: '#FFFFFF',
+              },
+            },
+          }}
+        />
       </div>
     </ClientThemeProvider>
+
+    <script is:inline>
+      // Add CSS variables for toast themes
+      function updateToastTheme() {
+        const isDark = document.documentElement.classList.contains('dark');
+        document.documentElement.style.setProperty('--toast-bg', isDark ? '#1F2937' : '#FFFFFF');
+        document.documentElement.style.setProperty('--toast-color', isDark ? '#FFFFFF' : '#000000');
+        document.documentElement.style.setProperty('--toast-border', isDark ? '#374151' : '#E5E7EB');
+      }
+
+      // Initial theme setup
+      updateToastTheme();
+
+      // Update theme when it changes
+      document.addEventListener('theme-change', updateToastTheme);
+    </script>
 
     <script define:vars={{ someVar: 'value' }}>
       // Create a separate module for AOS initialization

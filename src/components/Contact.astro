@@ -8,6 +8,7 @@ interface FormField {
   label: string;
   type: InputType;
   placeholder: string;
+  name: string;
   rows?: number;
 }
 
@@ -16,32 +17,37 @@ const formFields: FormField[] = [
     id: 'name',
     label: 'Name',
     type: 'text',
-    placeholder: 'John Doe'
+    placeholder: 'John Doe',
+    name: 'from_name'  // Matches template variable
   },
   {
     id: 'email',
     label: 'Email',
     type: 'email',
-    placeholder: 'john@example.com'
+    placeholder: 'john@example.com',
+    name: 'user_email'  // For reply functionality
   },
   {
     id: 'subject',
     label: 'Subject',
     type: 'text',
-    placeholder: 'Project Discussion'
+    placeholder: 'Project Discussion',
+    name: 'subject'
   },
   {
     id: 'message',
     label: 'Message',
     type: 'textarea',
     placeholder: 'Tell me about your project...',
+    name: 'message',  // Matches template variable
     rows: 4
   }
 ];
----
-<section id="contact" class="relative py-24 bg-white dark:bg-[#0B1120] transition-colors duration-300">
-  <div class="absolute inset-0 bg-gradient-to-b from-blue-50/20 to-transparent dark:from-[#0B1120]/80 dark:to-[#0B1120]/30"></div>
 
+const recipientName = "Shrihari"; 
+---
+
+<section id="contact" class="relative py-24 bg-white dark:bg-[#0B1120] transition-colors duration-300">
   <div class="container mx-auto px-4 max-w-6xl relative z-10">
     <div class="text-center mb-16 animate-fade-in">
       <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -54,7 +60,10 @@ const formFields: FormField[] = [
     </div>
 
     <div class="max-w-2xl mx-auto">
-      <form class="space-y-8">
+      <form id="contact-form" class="space-y-8">
+        <!-- Hidden input for recipient name -->
+        <input type="hidden" name="to_name" value={recipientName} />
+        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           {formFields.slice(0, 2).map((field, index) => (
             <div class="form-group animate-slide-up" style={`--delay: ${0.2 + index * 0.1}s`}>
@@ -62,6 +71,7 @@ const formFields: FormField[] = [
                 <input
                   type={field.type === 'textarea' ? undefined : field.type}
                   id={field.id}
+                  name={field.name}
                   class="peer w-full px-4 pt-6 pb-2 text-gray-900 dark:text-white 
                          bg-white/5 dark:bg-[#1a2333]/50 rounded-lg
                          border-2 border-gray-200/50 dark:border-gray-700/50
@@ -70,6 +80,7 @@ const formFields: FormField[] = [
                          focus:ring-0 transition-all duration-300
                          placeholder-transparent backdrop-blur-sm"
                   placeholder={field.placeholder}
+                  required
                 />
                 <label
                   for={field.id}
@@ -94,6 +105,7 @@ const formFields: FormField[] = [
               {field.type === 'textarea' ? (
                 <textarea
                   id={field.id}
+                  name={field.name}
                   rows={field.rows}
                   class="peer w-full px-4 pt-6 pb-2 text-gray-900 dark:text-white 
                          bg-white/5 dark:bg-[#1a2333]/50 rounded-lg
@@ -103,11 +115,13 @@ const formFields: FormField[] = [
                          focus:ring-0 transition-all duration-300
                          placeholder-transparent backdrop-blur-sm resize-none"
                   placeholder={field.placeholder}
+                  required
                 ></textarea>
               ) : (
                 <input
                   type={field.type}
                   id={field.id}
+                  name={field.name}
                   class="peer w-full px-4 pt-6 pb-2 text-gray-900 dark:text-white 
                          bg-white/5 dark:bg-[#1a2333]/50 rounded-lg
                          border-2 border-gray-200/50 dark:border-gray-700/50
@@ -116,6 +130,7 @@ const formFields: FormField[] = [
                          focus:ring-0 transition-all duration-300
                          placeholder-transparent backdrop-blur-sm"
                   placeholder={field.placeholder}
+                  required
                 />
               )}
               <label
@@ -147,145 +162,94 @@ const formFields: FormField[] = [
               <span>Send Message</span>
               <Icon name="mdi:send" class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
             </span>
-            <div class="absolute inset-0 -z-10 bg-gradient-to-br from-blue-600 to-blue-700 
-                      opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </button>
         </div>
       </form>
     </div>
   </div>
-
-  <div class="absolute inset-0 bg-grid-gray-900/[0.02] dark:bg-grid-gray-100/[0.02] pointer-events-none"></div>
 </section>
 
-<style>
-  .animate-fade-in {
-    opacity: 0;
-    animation: fadeIn 0.6s ease-out forwards;
-  }
-
-  .animate-slide-up {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: slideUp 0.6s ease-out forwards;
-    animation-delay: var(--delay, 0s);
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Custom autofill styles */
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover, 
-  input:-webkit-autofill:focus {
-    -webkit-text-fill-color: inherit;
-    -webkit-box-shadow: 0 0 0px 1000px transparent inset;
-    transition: background-color 5000s ease-in-out 0s;
-  }
-</style>
+<script is:inline src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
 <script>
-// Type guards
-function isHTMLFormElement(element: Element): element is HTMLFormElement {
-  return element instanceof HTMLFormElement;
-}
+import toast from 'react-hot-toast';
+// Add type definitions for EmailJS
+declare const emailjs: {
+  init: (publicKey: string) => void;
+  sendForm: (
+    serviceId: string,
+    templateId: string,
+    form: HTMLFormElement
+  ) => Promise<{
+    status: number;
+    text: string;
+  }>;
+};
 
-function isFormElement(element: Element): element is HTMLInputElement | HTMLTextAreaElement {
-  return element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement;
-}
+// Initialize EmailJS
+(function() {
+  emailjs.init("lJwm-ZeWnTmEbq1qi"); // Replace with your actual public key
+})();
 
-// Form submission handler
-document.querySelectorAll('form').forEach(formElement => {
-  if (!isHTMLFormElement(formElement)) return;
+// Form submission handler with proper type annotations
+document.getElementById('contact-form')?.addEventListener('submit', function(e: Event) {
+  e.preventDefault();
+  
+  const form = e.target as HTMLFormElement;
+  const button = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+  const originalContent = button.innerHTML;
 
-  formElement.addEventListener('submit', async (e: SubmitEvent) => {
-    e.preventDefault();
-    
-    const form = e.target as HTMLFormElement;
-    const button = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
-    if (!button) return;
-    
-    const originalContent = button.innerHTML;
-    button.disabled = true;
-    button.innerHTML = `
-      <span class="flex items-center gap-2">
-        <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-        </svg>
-        Sending...
-      </span>
-    `;
+  const loadingToast = toast.loading('Sending message...');
+  
+  button.disabled = true;
+  button.innerHTML = `
+    <span class="flex items-center gap-2">
+      <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+      </svg>
+      Sending...
+    </span>
+  `;
 
-    try {
-      // Simulate form submission
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Show success state (optional)
-      button.innerHTML = `
-        <span class="flex items-center gap-2">
-          <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-          </svg>
-          Sent!
-        </span>
-      `;
-
-      // Reset form after delay
-      setTimeout(() => {
-        form.reset();
-        button.disabled = false;
-        button.innerHTML = originalContent;
-      }, 2000);
-    } catch (error) {
-      // Handle error state
-      button.innerHTML = `
-        <span class="flex items-center gap-2 text-red-500">
-          <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-          </svg>
-          Error
-        </span>
-      `;
-      
-      // Reset button after delay
+  emailjs.sendForm(
+    'service_8jdm3sg',  // Replace with your EmailJS service ID
+    'template_3eycr38', // Replace with your EmailJS template ID
+    form
+  ).then(
+    function() {
+      toast.dismiss(loadingToast);
+      toast.success('Message sent successfully! I\'ll get back to you soon.', {
+        duration: 5000,
+        style: {
+          background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
+          color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#000000',
+          border: '1px solid',
+          borderColor: document.documentElement.classList.contains('dark') ? '#374151' : '#e5e7eb',
+        },
+      });
+      form.reset();
       setTimeout(() => {
         button.disabled = false;
         button.innerHTML = originalContent;
-      }, 2000);
-    }
-  });
-});
+      }, 500);
+    },
+    function(error: { text: string }) {
+      toast.dismiss(loadingToast);
+      toast.error('Failed to send message. Please try again.', {
+        duration: 5000,
+        style: {
+          background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
+          color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#000000',
+          border: '1px solid',
+          borderColor: document.documentElement.classList.contains('dark') ? '#374151' : '#e5e7eb',
+        },
+      });
 
-// Handle input states
-document.querySelectorAll('input, textarea').forEach(element => {
-  if (!isFormElement(element)) return;
-  
-  const updateState = () => {
-    if (element.value) {
-      element.classList.add('has-value');
-    } else {
-      element.classList.remove('has-value');
+      console.log('FAILED...', error);
+      button.disabled = false;
+      button.innerHTML = originalContent;
     }
-  };
-
-  element.addEventListener('input', updateState);
-  element.addEventListener('change', updateState);
-  
-  // Initial state
-  updateState();
+  );
 });
 </script>

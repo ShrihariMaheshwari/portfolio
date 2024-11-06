@@ -50,9 +50,8 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
           <img 
             src={project.image} 
             alt={project.title}
-            className="w-full h-full object-cover transition-transform duration-300"
+            className="w-full h-full object-cover "
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 dark:from-[#0B1120]/80 to-transparent" />
         </motion.div>
         
         <div className="p-6">

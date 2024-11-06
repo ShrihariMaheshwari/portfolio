@@ -10,7 +10,7 @@
       "@components/*": ["src/components/*"],
       "@layouts/*": ["src/layouts/*"],
       "@styles/*": ["src/styles/*"],
-      "@utils/*": ["src/utils/*"],
+      "@utils/*": ["src/lib/*"],
       "@types/*": ["src/types/*"]
     },
     "types": ["astro/client", "@types/aos"]

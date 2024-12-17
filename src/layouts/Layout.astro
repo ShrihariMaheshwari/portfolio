@@ -58,7 +58,9 @@ const {
     <ClientThemeProvider client:load>
       <div class="min-h-screen flex flex-col relative bg-white dark:bg-gray-900">
         <CustomCursor client:only="react" />
-        <Navbar />
+        <Navbar>
+          <div id="theme-toggle-button" /> <!-- This should be your theme toggle button -->
+        </Navbar>
         <main class="flex-1">
           <slot />
         </main>

@@ -83,17 +83,22 @@ const socialLinks = [
       <div class="border-t border-gray-200 dark:border-gray-800 w-32 animate-scale-x"></div>
 
       <!-- Copyright and Git Message -->
-      <!-- Copyright and Git Message -->
-      <!-- Copyright and Git Message -->
-<div class="animate-fade-in-up">
-  <div class="text-sm text-gray-400 font-mono group transition-all duration-300 flex items-center">
-    <span class="opacity-60 mr-1">©</span>
-    <span class="mr-3">{currentYear}</span>
-    <span class="inline-flex items-center px-3 py-1.5 rounded-md bg-gray-800/50 group-hover:bg-gray-800/70 transition-all duration-300 whitespace-nowrap">
-      made with <span class="inline-block text-red-500 transform mx-1 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">❤️</span> by Shrihari
-    </span>
-  </div>
-</div>
+      <div class="animate-fade-in-up">
+        <div class="text-sm text-gray-400 font-mono group transition-all duration-300 flex items-center">
+          <span class="opacity-60 mr-1">©</span>
+          <span class="mr-3">{currentYear}</span>
+          
+          <!-- Mobile Message -->
+          <span class="md:hidden inline-flex items-center px-3 py-1.5 rounded-md bg-gray-800/50 group-hover:bg-gray-800/70 transition-all duration-300 whitespace-nowrap">
+            made with <span class="inline-block text-red-500 transform mx-1 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">❤️</span> by Shrihari
+          </span>
+      
+          <!-- Desktop Message -->
+          <span class="hidden md:inline-flex items-center px-3 py-1.5 rounded-md bg-gray-800/50 group-hover:bg-gray-800/70 transition-all duration-300 whitespace-nowrap">
+            git commit -m "made with <span class="inline-block text-red-500 transform mx-1 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">❤️</span> by Shrihari"
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </footer>

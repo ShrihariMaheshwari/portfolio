@@ -42,6 +42,7 @@ import { Icon } from 'astro-icon/components';
     let isAnimating = false;
     let lastScrollY = window.scrollY;
     let rafId: number;
+    let timeoutId: number | undefined;
 
     const toggleScrollButton = (): void => {
       if (!isAnimating) {
@@ -69,12 +70,12 @@ import { Icon } from 'astro-icon/components';
       });
     };
 
-    let timeout: ReturnType<typeof setTimeout>;
     const throttledScroll = () => {
-      if (timeout) return;
-      timeout = setTimeout(() => {
+      if (timeoutId !== undefined) return;
+      
+      timeoutId = window.setTimeout(() => {
         toggleScrollButton();
-        timeout = null;
+        timeoutId = undefined;
       }, 100);
     };
 
@@ -86,7 +87,7 @@ import { Icon } from 'astro-icon/components';
     return () => {
       window.removeEventListener('scroll', throttledScroll);
       scrollButton.removeEventListener('click', scrollToTop);
-      clearTimeout(timeout);
+      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
       if (rafId) cancelAnimationFrame(rafId);
     };
   };

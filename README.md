@@ -143,7 +143,7 @@ This project is [MIT](LICENSE) licensed.
 
 ## 👤 Contact
 
-- Website: [your-website.com](https://your-website.com)
+- Website: [your-website.com](https://shriharim.com)
 - Email: shrihari.maheshwari7@gmail.com
 - LinkedIn: [https://www.linkedin.com/in/shriharimaheshwari](https://www.linkedin.com/in/shriharimaheshwari)
 - GitHub: [https://github.com/ShrihariMaheshwari](https://github.com/ShrihariMaheshwari)

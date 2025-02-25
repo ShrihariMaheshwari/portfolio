@@ -1,47 +1,149 @@
-# Astro Starter Kit: Minimal
+# Portfolio Website
 
-```sh
-npm create astro@latest -- --template minimal
+![Portfolio Banner](public/SM.webp)
+
+A modern, responsive portfolio website built with Astro and React. This project showcases my skills, projects, and professional experience with a sleek design and performant architecture.
+
+## ✨ Features
+
+- **Modern Stack**: Built with Astro for fast static site generation with React components
+- **Responsive Design**: Fully responsive layout that works on devices of all sizes
+- **Dark/Light Mode**: Toggle between light and dark themes
+- **Animations**: Smooth animations and transitions for enhanced user experience
+- **Performance Optimized**: Fast load times and optimized assets
+- **Contact Form**: Integrated EmailJS contact form with validation
+- **SEO Friendly**: Optimized metadata and structured data for better search engine visibility
+
+## 🚀 Tech Stack
+
+- **Framework**: [Astro](https://astro.build/)
+- **UI Components**: [React](https://reactjs.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Icons**: [Astro Icon](https://github.com/natemoo-re/astro-icon)
+- **Form Handling**: [EmailJS](https://www.emailjs.com/)
+- **Notifications**: [React Hot Toast](https://react-hot-toast.com/)
+- **Animation on Scroll**: [AOS](https://michalsnik.github.io/aos/)
+
+## 📋 Project Structure
+
 ```
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
 /
-├── public/
+├── public/             # Static assets
+│   └── images/         # Image files
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── components/     # UI components
+│   │   ├── animations/ # Animation components
+│   │   ├── effects/    # Visual effects
+│   │   └── theme/      # Theme-related components
+│   ├── data/           # Data files
+│   ├── layouts/        # Layout components
+│   ├── lib/            # Utility functions
+│   ├── pages/          # Page components
+│   ├── styles/         # Global styles
+│   └── types/          # TypeScript type definitions
+└── package.json        # Project dependencies
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 🛠️ Getting Started
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+### Prerequisites
 
-Any static assets, like images, can be placed in the `public/` directory.
+- Node.js (v14 or higher)
+- npm or yarn
 
-## 🧞 Commands
+### Installation
 
-All commands are run from the root of the project, from a terminal:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ShrihariMaheshwari/portfolio.git
+   cd portfolio
+   ```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn
+   ```
 
-## 👀 Want to learn more?
+3. Start the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+4. Open your browser and navigate to `http://localhost:4321`
+
+## 🚢 Deployment
+
+### Build for Production
+
+```bash
+npm run build
+# or
+yarn build
+```
+
+The built application will be in the `dist/` directory, ready to be deployed to any static hosting service like Vercel, Netlify, or GitHub Pages.
+
+## 🔧 Configuration
+
+### EmailJS Setup
+
+1. Create an account at [EmailJS](https://www.emailjs.com/)
+2. Create a service and template
+3. Update the following values in the `Contact.astro` component:
+   ```javascript
+   emailjs.init("YOUR_PUBLIC_KEY");
+   
+   emailjs.sendForm(
+     'YOUR_SERVICE_ID',
+     'YOUR_TEMPLATE_ID',
+     form
+   )
+   ```
+
+## 📝 Customization
+
+### Personal Information
+
+Update personal information in the following files:
+
+- `src/data/site.ts` - Website metadata and personal links
+- `src/components/About.astro` - Skills and achievements
+- `src/components/Experience.astro` - Work experience
+- `src/components/Projects.astro` - Portfolio projects
+
+### Themes
+
+Customize theme colors in the TailwindCSS configuration file:
+
+```javascript
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        // Your custom colors
+      }
+    }
+  }
+}
+```
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/ShrihariMaheshwari/portfolio/issues).
+
+## 📄 License
+
+This project is [MIT](LICENSE) licensed.
+
+## 👤 Contact
+
+- Website: [your-website.com](https://your-website.com)
+- Email: shrihari.maheshwari7@gmail.com
+- LinkedIn: [https://www.linkedin.com/in/shriharimaheshwari](https://www.linkedin.com/in/shriharimaheshwari)
+- GitHub: [https://github.com/ShrihariMaheshwari](https://github.com/ShrihariMaheshwari)

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 export default function CustomCursor() {
+  const [isVisible, setIsVisible] = useState(false);
   const [isPointer, setIsPointer] = useState(false);
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
@@ -12,28 +13,32 @@ export default function CustomCursor() {
   const cursorYSpring = useSpring(cursorY, springConfig);
 
   useEffect(() => {
-    const moveCursor = (e: MouseEvent) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
-    };
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      setIsVisible(true);
+      const moveCursor = (e: MouseEvent) => {
+        cursorX.set(e.clientX);
+        cursorY.set(e.clientY);
+      };
+      const updatePointerType = () => {
+        const hoveredElement = document.querySelector(':hover');
+        setIsPointer(
+          hoveredElement?.tagName === 'A' || 
+          hoveredElement?.tagName === 'BUTTON' ||
+          getComputedStyle(hoveredElement as Element).cursor === 'pointer'
+        );
+      };
 
-    const updatePointerType = () => {
-      const hoveredElement = document.querySelector(':hover');
-      setIsPointer(
-        hoveredElement?.tagName === 'A' || 
-        hoveredElement?.tagName === 'BUTTON' ||
-        getComputedStyle(hoveredElement as Element).cursor === 'pointer'
-      );
-    };
-
-    window.addEventListener('mousemove', moveCursor);
-    window.addEventListener('mouseover', updatePointerType);
-
-    return () => {
-      window.removeEventListener('mousemove', moveCursor);
-      window.removeEventListener('mouseover', updatePointerType);
-    };
+      window.addEventListener('mousemove', moveCursor);
+      window.addEventListener('mouseover', updatePointerType);
+      
+      return () => {
+        window.removeEventListener('mousemove', moveCursor);
+        window.removeEventListener('mouseover', updatePointerType);
+      };
+    }
   }, []);
+
+  if (!isVisible) return null;
 
   return (
     <motion.div

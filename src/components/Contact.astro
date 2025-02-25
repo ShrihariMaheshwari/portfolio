@@ -152,6 +152,7 @@ const recipientName = "Shrihari";
         <div class="animate-slide-up" style="--delay: 0.6s">
           <button
             type="submit"
+            id="submit-button"
             class="group relative w-full px-6 py-4 bg-gradient-to-br from-blue-500 to-blue-600 
                    text-white rounded-lg font-medium overflow-hidden
                    transition-all duration-300 hover:-translate-y-1
@@ -173,6 +174,7 @@ const recipientName = "Shrihari";
 
 <script>
 import toast from 'react-hot-toast';
+
 // Add type definitions for EmailJS
 declare const emailjs: {
   init: (publicKey: string) => void;
@@ -188,16 +190,66 @@ declare const emailjs: {
 
 // Initialize EmailJS
 (function() {
-  emailjs.init("lJwm-ZeWnTmEbq1qi"); // Replace with your actual public key
+  emailjs.init("lJwm-ZeWnTmEbq1qi"); // Your EmailJS public key
 })();
 
-// Form submission handler with proper type annotations
+// Form submission handler with enhanced validation
 document.getElementById('contact-form')?.addEventListener('submit', function(e: Event) {
   e.preventDefault();
   
   const form = e.target as HTMLFormElement;
+  const nameInput = form.querySelector('#name') as HTMLInputElement;
+  const emailInput = form.querySelector('#email') as HTMLInputElement;
+  const subjectInput = form.querySelector('#subject') as HTMLInputElement;
+  const messageInput = form.querySelector('#message') as HTMLTextAreaElement;
   const button = form.querySelector('button[type="submit"]') as HTMLButtonElement;
   const originalContent = button.innerHTML;
+
+  // Clear any existing error messages first
+  clearAllErrors(form);
+  
+  // Enhanced validation
+  let isValid = true;
+  
+  if (!nameInput.value.trim()) {
+    showInputError(nameInput, 'Please enter your name');
+    isValid = false;
+  }
+  
+  if (!emailInput.value.trim()) {
+    showInputError(emailInput, 'Please enter your email address');
+    isValid = false;
+  } else if (!/^\S+@\S+\.\S+$/.test(emailInput.value)) {
+    showInputError(emailInput, 'Please enter a valid email address');
+    isValid = false;
+  }
+  
+  if (!subjectInput.value.trim()) {
+    showInputError(subjectInput, 'Please enter a subject');
+    isValid = false;
+  }
+  
+  if (!messageInput.value.trim()) {
+    showInputError(messageInput, 'Please enter your message');
+    isValid = false;
+  } else if (messageInput.value.trim().length < 10) {
+    showInputError(messageInput, 'Your message should be at least 10 characters');
+    isValid = false;
+  }
+  
+  if (!isValid) {
+    // Show toast for validation errors
+    toast.error('Please fix the errors in the form', {
+      duration: 3000,
+      style: {
+        background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
+        color: document.documentElement.classList.contains('dark') ? '#ffffff' : '#000000',
+        border: '1px solid',
+        borderColor: document.documentElement.classList.contains('dark') ? '#374151' : '#e5e7eb',
+      },
+    });
+    return;
+  }
 
   const loadingToast = toast.loading('Sending message...');
   
@@ -252,4 +304,87 @@ document.getElementById('contact-form')?.addEventListener('submit', function(e: 
     }
   );
 });
+
+// Function to show validation errors
+function showInputError(input: HTMLInputElement | HTMLTextAreaElement, message: string) {
+  // Add error class to the input
+  input.classList.add('border-red-500');
+  
+  // Create error message element
+  const errorMsg = document.createElement('p');
+  errorMsg.classList.add('text-red-500', 'text-xs', 'mt-1', 'input-error');
+  errorMsg.textContent = message;
+  
+  // Remove any existing error message for this input
+  const existingError = input.parentElement?.querySelector('.input-error');
+  if (existingError) existingError.remove();
+  
+  // Add the error message after the input
+  input.parentElement?.appendChild(errorMsg);
+  
+  // Set up event listener to remove error on input
+  input.addEventListener('input', function() {
+    input.classList.remove('border-red-500');
+    const errorToRemove = input.parentElement?.querySelector('.input-error');
+    if (errorToRemove) errorToRemove.remove();
+  }, { once: true });
+  
+  // Focus the first invalid input
+  if (!document.querySelector(':focus')) {
+    input.focus();
+  }
+}
+
+// Function to clear all error messages
+function clearAllErrors(form: HTMLFormElement) {
+  const errorMessages = form.querySelectorAll('.input-error');
+  errorMessages.forEach(error => error.remove());
+  
+  const errorInputs = form.querySelectorAll('.border-red-500');
+  errorInputs.forEach(input => {
+    if (input instanceof HTMLElement) {
+      input.classList.remove('border-red-500');
+    }
+  });
+}
+
+// Add keypress event to submit form on Enter key in the last input
+document.querySelector('#message')?.addEventListener('keypress', function(e) {
+  // Use type assertion to tell TypeScript this is a KeyboardEvent
+  const keyEvent = e as KeyboardEvent;
+  
+  if (keyEvent.key === 'Enter' && keyEvent.ctrlKey) {
+    document.getElementById('submit-button')?.click();
+  }
+});
 </script>
+
+<style>
+/* Animation for error messages */
+.input-error {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Style placeholder text in dark mode */
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: rgba(156, 163, 175, 0.5);
+}
+
+/* Improve focus states for accessibility */
+input:focus, textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.5);
+}
+</style>

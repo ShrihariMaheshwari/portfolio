@@ -1,13 +1,14 @@
 ---
 // src/layouts/Layout.astro
-import CustomCursor from '../components/effects/CustomCursor';
-import ClientThemeProvider from '../components/theme/ClientThemeProvider';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import ScrollToTop from '../components/ScrollToTop.astro';
+import CustomCursor from '../components/effects/CustomCursor'; // Direct import for client:only
+import ClientThemeProvider from '../components/theme/ClientThemeProvider';
 import { Toaster } from 'react-hot-toast';
 import 'aos/dist/aos.css';
 
+// Define props interface
 interface Props {
   title: string;
   description?: string;
@@ -17,25 +18,44 @@ const {
   title, 
   description = "Shrihari Maheshwari - Full Stack Developer Portfolio" 
 } = Astro.props;
+
+// Define SEO metadata
+const ogImage = "/og-image.jpg"; // Update with your actual OG image path
 ---
 
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="/SM.webp" />
-    <title>{title}</title>
-
-    <!-- Add Umami Analytics script -->
     
-      <script 
-        defer 
-        src="https://cloud.umami.is/script.js" 
-        data-website-id="f1fd86bf-5768-4989-b568-7c972bb1baba"
-      ></script>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/SM.webp" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    
+    <!-- Title -->
+    <title>{title}</title>
+    
+    <!-- SEO & Open Graph Tags -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Preload essential assets -->
+    <link rel="preload" href="/SM.webp" as="image" />
+    
+    <!-- Add Umami Analytics script -->
+    <script 
+      defer 
+      src="https://cloud.umami.is/script.js" 
+      data-website-id="f1fd86bf-5768-4989-b568-7c972bb1baba"
+    ></script>
       
+    <!-- Theme initialization script - run early to prevent FOUC -->
     <script is:inline>
       (function() {
         function getInitialTheme() {
@@ -57,23 +77,30 @@ const {
   <body>
     <ClientThemeProvider client:load>
       <div class="min-h-screen flex flex-col relative bg-white dark:bg-gray-900">
+        <!-- Load custom cursor only on devices with pointer capabilities -->
         <CustomCursor client:only="react" />
+        
         <Navbar />
+        
         <main class="flex-1">
           <slot />
         </main>
+        
         <Footer />
+        
         <ScrollToTop />
-        <!-- Added Toaster component -->
+        
+        <!-- Lazily loaded Toaster component -->
         <Toaster
-          client:load
-          position="bottom-right"
+          client:idle
+          position="bottom-center"
           toastOptions={{
             className: '',
             style: {
               background: 'var(--toast-bg)',
               color: 'var(--toast-color)',
               border: '1px solid var(--toast-border)',
+              marginBottom: '2rem'
             },
             success: {
               duration: 5000,
@@ -94,6 +121,7 @@ const {
       </div>
     </ClientThemeProvider>
 
+    <!-- Toast theme variables -->
     <script is:inline>
       // Add CSS variables for toast themes
       function updateToastTheme() {
@@ -110,14 +138,28 @@ const {
       document.addEventListener('theme-change', updateToastTheme);
     </script>
 
-    <script define:vars={{ someVar: 'value' }}>
-      // Create a separate module for AOS initialization
+    <!-- AOS (Animate On Scroll) initialization with optimized loading -->
+    <script>
+      // Optimized AOS initialization with dynamic import
+      interface AOS {
+        init: (config: any) => void;
+        refresh: () => void;
+      }
+      
+      let aosInstance: AOS | null = null;
+      let resizeTimer: ReturnType<typeof setTimeout> | null = null;
+      let isAOSLoaded = false;
+
+      // Initialize AOS only when needed
       const initializeAOS = async () => {
+        if (isAOSLoaded) return aosInstance;
+        
         try {
           const AOS = (await import('aos')).default;
-          const aos = AOS;
-
-          aos.init({
+          isAOSLoaded = true;
+          
+          // Configure AOS
+          AOS.init({
             duration: 800,
             once: true,
             offset: 100,
@@ -128,15 +170,38 @@ const {
             anchorPlacement: 'top-bottom',
           });
 
-          return aos;
+          aosInstance = AOS;
+          return aosInstance;
         } catch (error) {
           console.error('Error initializing AOS:', error);
           return null;
         }
       };
 
-      let aosInstance = null;
-      let resizeTimer = null;
+      // Load AOS when page becomes visible or when user scrolls
+      const lazyLoadAOS = () => {
+        if (!isAOSLoaded && (document.visibilityState === 'visible' || window.scrollY > 100)) {
+          initializeAOS();
+          
+          // Remove event listeners once AOS is loaded
+          document.removeEventListener('visibilitychange', lazyLoadAOS);
+          window.removeEventListener('scroll', lazyLoadAOS);
+        }
+      };
+
+      // Add event listeners for lazy loading
+      document.addEventListener('visibilitychange', lazyLoadAOS);
+      window.addEventListener('scroll', lazyLoadAOS, { passive: true });
+      
+      // Check visibility immediately
+      if (document.visibilityState === 'visible') {
+        // Use requestIdleCallback if available, otherwise setTimeout
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(() => initializeAOS());
+        } else {
+          setTimeout(() => initializeAOS(), 1000);
+        }
+      }
 
       // Initialize AOS on page load
       document.addEventListener('astro:page-load', async () => {
@@ -145,32 +210,28 @@ const {
 
       // Refresh AOS on view transitions
       document.addEventListener('astro:after-swap', () => {
-        if (aosInstance) {
-          aosInstance.refresh();
-        }
+        aosInstance?.refresh();
       });
 
       // Handle theme changes
       document.addEventListener('theme-change', () => {
         if (aosInstance) {
           setTimeout(() => {
-            aosInstance.refresh();
+            aosInstance?.refresh();
           }, 300);
         }
       });
 
-      // Handle resize events
+      // Debounced resize handler
       window.addEventListener('resize', () => {
         if (resizeTimer) {
           clearTimeout(resizeTimer);
         }
         
         resizeTimer = setTimeout(() => {
-          if (aosInstance) {
-            aosInstance.refresh();
-          }
+          aosInstance?.refresh();
         }, 250);
-      });
+      }, { passive: true });
     </script>
   </body>
 </html>
